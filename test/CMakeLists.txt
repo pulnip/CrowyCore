@@ -1,0 +1,21 @@
+enable_testing()
+
+add_executable(CrowyCoreTest
+    dynamic_vector.cpp
+    math_test.cpp
+)
+
+target_link_libraries(CrowyCoreTest
+PRIVATE
+    Crowy::Core
+    GTest::gtest_main
+    GTest::gmock_main
+)
+
+include(GoogleTest)
+add_test(
+    NAME Crowy-Core-Test
+    COMMAND $<TARGET_FILE:CrowyCoreTest>
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+set_tests_properties(Crowy-Core-Test PROPERTIES LABELS "unit;core")
