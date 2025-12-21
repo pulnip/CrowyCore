@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <cassert>
 #include <cmath>
 #include <type_traits>
 
@@ -469,5 +470,21 @@ namespace Crowy
             Vec4{0.0f, 0.0f,  s.z, 0.0f},
             Vec4{0.0f, 0.0f, 0.0f, 1.0f}
         };
+    }
+
+    constexpr bool overlap(
+        float m1, float M1,
+        float m2, float M2,
+        float epsilon = 0
+    ){
+        assert(epsilon >= 0);
+        if(m1 > m2){
+            std::swap(m1, m2);
+            std::swap(M1, M2);
+        }
+
+        if(M1 < m2 - epsilon)
+            return false;
+        return true;
     }
 }

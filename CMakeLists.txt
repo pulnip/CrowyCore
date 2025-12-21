@@ -10,10 +10,15 @@ else()
     option(CROWYCORE_ENABLE_TEST "Enable Tests" ON)
 endif()
 
-add_library(CrowyCore INTERFACE)
+add_library(CrowyCore STATIC)
+
+target_sources(CrowyCore
+PRIVATE
+    src/gjk.cpp
+)
 
 target_include_directories(CrowyCore
-INTERFACE
+PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/include"
 )
 

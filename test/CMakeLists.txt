@@ -1,8 +1,11 @@
 enable_testing()
 
 add_executable(CrowyCoreTest
-    dynamic_vector.cpp
+    dynamic_vector_test.cpp
+    gjk2d_test.cpp
+    gjk3d_test.cpp
     math_test.cpp
+    obb_test.cpp
 )
 
 target_link_libraries(CrowyCoreTest
