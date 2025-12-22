@@ -10,6 +10,17 @@ else()
     option(CROWYCORE_ENABLE_TEST "Enable Tests" ON)
 endif()
 
+# target NumericalMethod
+add_library(CrowyNumericalMethod INTERFACE)
+
+target_include_directories(CrowyNumericalMethod
+INTERFACE
+    "${CMAKE_CURRENT_SOURCE_DIR}/include"
+)
+
+add_library(Crowy::NumericalMethod ALIAS CrowyNumericalMethod)
+
+# target Core
 add_library(CrowyCore STATIC)
 
 target_sources(CrowyCore
@@ -20,6 +31,11 @@ PRIVATE
 target_include_directories(CrowyCore
 PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/include"
+)
+
+target_link_libraries(CrowyCore
+PUBLIC
+    Crowy::NumericalMethod
 )
 
 add_library(Crowy::Core ALIAS CrowyCore)
