@@ -23,7 +23,7 @@ namespace Crowy
     };
 
     template<typename T>
-    struct generic_handleHash{
+    struct generic_handle_hash{
         size_t operator()(const generic_handle<T>& handle) const{
             return std::hash<Index>()(handle.index) ^ (std::hash<uint32_t>()(handle.generation) << 1);
         }
