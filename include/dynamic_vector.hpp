@@ -12,6 +12,7 @@
 #include "concepts.hpp"
 #include "core_types.hpp"
 #include "ptr_util.hpp"
+#include "semantics.hpp"
 
 namespace Crowy
 {
@@ -77,18 +78,16 @@ namespace Crowy
             if(mem != nullptr)
                 free(mem);
         }
+        DECLARE_PINNED(dynamic_vector)
+
         dynamic_vector(size_t CHUNK_SIZE)
-        :CHUNK_SIZE(CHUNK_SIZE){}
+            : CHUNK_SIZE(CHUNK_SIZE){}
         dynamic_vector(size_t CHUNK_SIZE, size_t initial_cap)
-        :CHUNK_SIZE(CHUNK_SIZE), cap_(initial_cap){
+            : CHUNK_SIZE(CHUNK_SIZE), cap_(initial_cap)
+        {
             if(CHUNK_SIZE != 0 && initial_cap != 0)
                 mem = malloc(CHUNK_SIZE*initial_cap);
         }
-
-        dynamic_vector(const dynamic_vector&) = delete;
-        dynamic_vector(dynamic_vector&&) = delete;
-        dynamic_vector& operator=(const dynamic_vector&) = delete;
-        dynamic_vector& operator=(dynamic_vector&&) = delete;
 
         class const_iterator;
 
@@ -103,10 +102,7 @@ namespace Crowy
         public:
             iterator(void* mem, size_t CHUNK_SIZE, Index pos)
             :mem(mem), CHUNK_SIZE(CHUNK_SIZE), pos(pos){}
-            iterator(const iterator&) = default;
-            iterator(iterator&&) = default;
-            iterator& operator=(const iterator&) = delete;
-            iterator& operator=(iterator&&) = delete;
+            DECLARE_TRANSFERABLE(iterator)
 
             void* operator*(){
                 return ptrAdd(mem, CHUNK_SIZE*pos);
@@ -146,10 +142,7 @@ namespace Crowy
 
         public:
             const_iterator(void* mem, size_t CHUNK_SIZE, Index pos){}
-            const_iterator(const const_iterator&) = default;
-            const_iterator(const_iterator&&) = default;
-            const_iterator& operator=(const const_iterator&) = default;
-            const_iterator& operator=(const_iterator&&) = default;
+            DECLARE_TRANSFERABLE(const_iterator)
 
             const void* operator*(){
                 return ptrAdd(mem, CHUNK_SIZE*pos);
