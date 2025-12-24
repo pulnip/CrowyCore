@@ -17,6 +17,10 @@ namespace Crowy
             return index != std::numeric_limits<Index>::max();
         }
 
+        static auto invalidHandle(){
+            return generic_handle{};
+        }
+
         friend bool operator==(const generic_handle& lhs, const generic_handle& rhs){
             return lhs.index == rhs.index && lhs.generation == rhs.generation;
         }

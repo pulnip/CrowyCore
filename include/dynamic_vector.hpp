@@ -101,8 +101,8 @@ namespace Crowy
 
         public:
             iterator(void* mem, size_t CHUNK_SIZE, Index pos)
-            :mem(mem), CHUNK_SIZE(CHUNK_SIZE), pos(pos){}
-            DECLARE_TRANSFERABLE(iterator)
+                :mem(mem), CHUNK_SIZE(CHUNK_SIZE), pos(pos){}
+            DECLARE_CONSTRUCT_ONLY(iterator)
 
             void* operator*(){
                 return ptrAdd(mem, CHUNK_SIZE*pos);
@@ -134,15 +134,16 @@ namespace Crowy
         };
         class const_iterator{
         private:
-            void* mem;
-            size_t CHUNK_SIZE;
+            const void* const mem;
+            const size_t CHUNK_SIZE;
             Index pos;
 
             friend iterator;
 
         public:
-            const_iterator(void* mem, size_t CHUNK_SIZE, Index pos){}
-            DECLARE_TRANSFERABLE(const_iterator)
+            const_iterator(const void* mem, size_t CHUNK_SIZE, Index pos)
+                :mem(mem), CHUNK_SIZE(CHUNK_SIZE), pos(pos){}
+            DECLARE_CONSTRUCT_ONLY(const_iterator)
 
             const void* operator*(){
                 return ptrAdd(mem, CHUNK_SIZE*pos);

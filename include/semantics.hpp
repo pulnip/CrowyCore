@@ -27,6 +27,14 @@
     DECLARE_DEFAULT_COPYABLE(Type) \
     DECLARE_DEFAULT_MOVABLE(Type)
 
+#define DECLARE_NON_ASSIGNABLE(Type) \
+    Type& operator=(const Type&) = delete; \
+    Type& operator=(Type&&) = delete;
+#define DECLARE_CONSTRUCT_ONLY(Type) \
+    Type(const Type&) = default; \
+    Type(Type&&) = default; \
+    DECLARE_NON_ASSIGNABLE(Type)
+
 // interface semantics
 #define DECLARE_INTERFACE(Type) \
     Type() = default; \
