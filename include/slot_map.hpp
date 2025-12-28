@@ -96,13 +96,13 @@ namespace Crowy
 
             freeIndexes.clear();
             for(Index i=0; i<slots.size(); ++i){
-                ++slots[i].generator;
+                ++slots[i].generation;
                 freeIndexes.push_back(i);
             }
         }
 
         T& operator[](Handle handle){
-            if( (handle.index > slots.size()) ||
+            if( (handle.index >= slots.size()) ||
                 (slots[handle.index].generation != handle.generation)
             )
                 throw std::out_of_range(std::format(
@@ -112,7 +112,7 @@ namespace Crowy
             return *slots[handle.index].get();
         }
         const T& operator[](Handle handle) const{
-            if( (handle.index > slots.size()) ||
+            if( (handle.index >= slots.size()) ||
                 (slots[handle.index].generation != handle.generation)
             )
                 throw std::out_of_range(std::format(
