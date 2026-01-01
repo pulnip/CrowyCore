@@ -10,11 +10,11 @@ namespace Crowy
 {
     template<typename T>
     struct generic_handle{
-        Index index = std::numeric_limits<Index>::max();
+        Index index = INVALID_INDEX;
         uint32_t generation = 0;
 
         bool isValid() const{
-            return index != std::numeric_limits<Index>::max();
+            return index != INVALID_INDEX;
         }
 
         static auto invalidHandle(){

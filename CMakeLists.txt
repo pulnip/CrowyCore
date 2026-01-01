@@ -23,9 +23,18 @@ add_library(Crowy::NumericalMethod ALIAS CrowyNumericalMethod)
 # target Core
 add_library(CrowyCore STATIC)
 
+file(GLOB ALL_HEADERS
+    "include/*.hpp"
+)
+file(GLOB ALL_SOURCES
+    "src/*.cpp"
+)
+
 target_sources(CrowyCore
+PUBLIC
+    ${ALL_HEADERS}
 PRIVATE
-    src/gjk.cpp
+    ${ALL_SOURCES}
 )
 
 target_include_directories(CrowyCore

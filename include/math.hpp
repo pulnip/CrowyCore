@@ -389,7 +389,7 @@ namespace Crowy
         };
     }
 
-    inline constexpr auto perspective(
+    inline auto perspective(
         float fovY, float aspect, float nearZ, float farZ
     ){
         auto tanHalfFovY = std::tan(0.5f * fovY);

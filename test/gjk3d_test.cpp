@@ -34,20 +34,20 @@ static const Vec3 line1[2]  = {{1,1,1}, {2,1,1}};
 static const Vec3 tri0[3]   = {{0,0,0}, {1,0,0}, {0,1,0}};
 
 // Regular icosahedron (12 vertices)
-static const float φ = 1.61803398875f, invφ = 0.61803398875f;
+static const float phi = 1.61803398875f, invPhi = 0.61803398875f;
 static const Vec3 icosa[12] = {
-    { 0,  1,  φ}, { 0, -1,  φ}, { 0,  1, -φ}, { 0, -1, -φ},
-    { 1,  φ,  0}, {-1,  φ,  0}, { 1, -φ,  0}, {-1, -φ,  0},
-    { φ,  0,  1}, {-φ,  0,  1}, { φ,  0, -1}, {-φ,  0, -1}
+    { 0,  1,  phi}, { 0, -1,  phi}, { 0,  1, -phi}, { 0, -1, -phi},
+    { 1,  phi,  0}, {-1,  phi,  0}, { 1, -phi,  0}, {-1, -phi,  0},
+    { phi,  0,  1}, {-phi,  0,  1}, { phi,  0, -1}, {-phi,  0, -1}
 };
 
 // Regular dodecahedron (20 vertices)
 static const Vec3 dodeca[20] = {
     { 1,  1,  1}, { 1,  1, -1}, { 1, -1,  1}, { 1, -1, -1},
     {-1,  1,  1}, {-1,  1, -1}, {-1, -1,  1}, {-1, -1, -1},
-    { 0,  invφ,  φ}, { 0, -invφ,  φ}, { 0,  invφ, -φ}, { 0, -invφ, -φ},
-    { invφ,  φ,  0}, {-invφ,  φ,  0}, { invφ, -φ,  0}, {-invφ, -φ,  0},
-    { φ,  0,  invφ}, { φ,  0, -invφ}, {-φ,  0,  invφ}, {-φ,  0, -invφ}
+    { 0,  invPhi,  phi}, { 0, -invPhi,  phi}, { 0,  invPhi, -phi}, { 0, -invPhi, -phi},
+    { invPhi,  phi,  0}, {-invPhi,  phi,  0}, { invPhi, -phi,  0}, {-invPhi, -phi,  0},
+    { phi,  0,  invPhi}, { phi,  0, -invPhi}, {-phi,  0,  invPhi}, {-phi,  0, -invPhi}
 };
 
 //— utility to translate a shape —//
