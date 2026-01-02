@@ -12,4 +12,12 @@ namespace Crowy
         );
         return upper;
     }
+
+    struct StringHash{
+        using is_transparent = void;
+
+        size_t operator()(std::string_view view) const{
+            return std::hash<std::string_view>{}(view);
+        }
+    };
 }
