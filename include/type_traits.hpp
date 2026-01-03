@@ -40,4 +40,9 @@ namespace Crowy
 
     static_assert(std::same_as<int, remove_optional_t<std::optional<int>>>);
     static_assert(std::same_as<int, remove_optional_t<int>>);
+
+    template<class... Ts>
+    struct overload: Ts...{
+        using Ts::operator()...;
+    };
 }

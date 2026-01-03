@@ -2,12 +2,13 @@
 
 #include <algorithm>
 #include <string>
+#include <string_view>
 
 namespace Crowy
 {
-    inline std::string toUpper(const std::string& text){
-        std::string upper = text;
-        std::transform(text.begin(), text.end(), upper.begin(),
+    inline std::string toUpper(std::string_view view){
+        std::string upper(view);
+        std::transform(view.begin(), view.end(), upper.begin(),
             [](unsigned char c){ return std::toupper(c); }
         );
         return upper;
