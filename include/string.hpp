@@ -1,18 +1,15 @@
 #pragma once
 
-#include <algorithm>
+#include <cstddef>
+#include <cstdint>
+#include <filesystem>
 #include <string>
 #include <string_view>
+#include <vector>
 
 namespace Crowy
 {
-    inline std::string toUpper(std::string_view view){
-        std::string upper(view);
-        std::transform(view.begin(), view.end(), upper.begin(),
-            [](unsigned char c){ return std::toupper(c); }
-        );
-        return upper;
-    }
+    std::string toUpper(std::string_view);
 
     struct StringHash{
         using is_transparent = void;
@@ -21,4 +18,7 @@ namespace Crowy
             return std::hash<std::string_view>{}(view);
         }
     };
+
+    std::string readFileAsString(const std::filesystem::path&);
+    std::vector<uint8_t> readFileAsBinary(const std::filesystem::path&);
 }
