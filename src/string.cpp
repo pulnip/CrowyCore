@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
+#include <stdexcept>
 #include "string.hpp"
 
 namespace Crowy
@@ -22,6 +23,8 @@ namespace Crowy
 
     std::vector<uint8_t> readFileAsBinary(const std::filesystem::path& path){
         std::ifstream file(path, std::ios::binary | std::ios::ate);
+        if(!file.is_open())
+            throw std::runtime_error("Failed to open file: " + path.string());
 
         auto size = file.tellg();
         file.seekg(0);
