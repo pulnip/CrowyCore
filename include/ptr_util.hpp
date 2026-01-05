@@ -2,8 +2,8 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include <utility>
-#include <print>
 
 namespace Crowy
 {
