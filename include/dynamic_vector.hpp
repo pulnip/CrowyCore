@@ -1,7 +1,6 @@
 #pragma once
 
 #include <bit>
-#include <cassert>
 #include <cstdlib>
 #include <format>
 #include <optional>
@@ -9,6 +8,7 @@
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
+#include "assert.hpp"
 #include "concepts.hpp"
 #include "core_types.hpp"
 #include "ptr_util.hpp"
@@ -17,23 +17,23 @@
 namespace Crowy
 {
     template<value_type T>
-    void emplace(void* dst, T&& t){
+    void emplace(void* dst, T&& t) noexcept{
         *static_cast<T*>(dst) = std::forward<T>(t);
     }
     template<value_type T1, all_value... TN>
-    void emplace(void* dst, T1&& t1, TN&&... tn){
+    void emplace(void* dst, T1&& t1, TN&&... tn) noexcept{
         *static_cast<T1*>(dst) = std::forward<T1>(t1);
         emplace(ptrAdd<T1>(dst), std::forward<TN>(tn)...);
     }
     template<pointer_type T>
-    void emplace(void* dst, const T t){
+    void emplace(void* dst, const T t) noexcept{
         using U = std::remove_pointer_t<std::remove_cvref_t<T>>;
 
         if constexpr(!std::is_null_pointer_v<U>)
             *static_cast<U*>(dst) = *t;
     }
     template<pointer_type T1, all_pointer... TN>
-    void emplace(void* dst, const T1 t1, const TN... tn){
+    void emplace(void* dst, const T1 t1, const TN... tn) noexcept{
         using U = std::remove_pointer_t<std::remove_cvref_t<T1>>;
 
         if constexpr(!std::is_null_pointer_v<T1>){
@@ -43,14 +43,14 @@ namespace Crowy
         emplace(dst, tn...);
     }
     template<optional_type T>
-    void emplace(void* dst, T&& t){
+    void emplace(void* dst, T&& t) noexcept{
         using U = remove_optional_t<std::remove_cvref_t<T>>;
 
         if(t.has_value())
             *static_cast<U*>(dst) = t.value();
     }
     template<optional_type T1, all_optional... TN>
-    void emplace(void* dst, T1&& t1, TN&&... tn){
+    void emplace(void* dst, T1&& t1, TN&&... tn) noexcept{
         using U = remove_optional_t<std::remove_cvref_t<T1>>;
 
         if(t1.has_value()){
@@ -61,7 +61,7 @@ namespace Crowy
     }
 
     template<typename... T>
-    constexpr size_t sum_sizeof(){
+    consteval size_t sum_sizeof() noexcept{
         return (size_t{0} + ... + sizeof(T));
     }
 
@@ -104,31 +104,34 @@ namespace Crowy
                 :mem(mem), CHUNK_SIZE(CHUNK_SIZE), pos(pos){}
             DECLARE_CONSTRUCT_ONLY(iterator)
 
-            void* operator*(){
+            void* operator*() noexcept{
+                return const_cast<void*>(
+                    *static_cast<iterator&>(*this)
+                );
+            }
+            const void* operator*() const noexcept{
+                CROWY_ASSERT((CHUNK_SIZE!=0 || mem != nullptr),
+                    "CHUNK_SIZE==0, intentional crash");
                 return ptrAdd(mem, CHUNK_SIZE*pos);
             }
-            const void* operator*() const{
-                assert((CHUNK_SIZE!=0 || mem != nullptr) && "CHUNK_SIZE==0, intentional crash");
-                return ptrAdd(mem, CHUNK_SIZE*pos);
-            }
-            iterator& operator++(){
+            iterator& operator++() noexcept{
                 ++pos;
                 return *this;
             }
-            bool operator!=(const iterator& other) const{
-                assert(mem == other.mem);
+            bool operator!=(const iterator& other) const noexcept{
+                CROWY_ASSERT(mem == other.mem);
                 return pos != other.pos;
             }
-            bool operator==(const iterator& other) const{
-                assert(mem == other.mem);
+            bool operator==(const iterator& other) const noexcept{
+                CROWY_ASSERT(mem == other.mem);
                 return pos == other.pos;
             }
-            bool operator!=(const const_iterator& other) const{
-                assert(mem == other.mem);
+            bool operator!=(const const_iterator& other) const noexcept{
+                CROWY_ASSERT(mem == other.mem);
                 return pos != other.pos;
             }
-            bool operator==(const const_iterator& other) const{
-                assert(mem == other.mem);
+            bool operator==(const const_iterator& other) const noexcept{
+                CROWY_ASSERT(mem == other.mem);
                 return pos == other.pos;
             }
         };
@@ -145,54 +148,55 @@ namespace Crowy
                 :mem(mem), CHUNK_SIZE(CHUNK_SIZE), pos(pos){}
             DECLARE_CONSTRUCT_ONLY(const_iterator)
 
-            const void* operator*(){
-                return ptrAdd(mem, CHUNK_SIZE*pos);
+            const void* operator*() noexcept{
+                return *static_cast<const const_iterator&>(*this);
             }
-            const void* operator*() const{
-                assert((CHUNK_SIZE!=0 || mem != nullptr) && "CHUNK_SIZE==0, intentional crash");
+            const void* operator*() const noexcept{
+                CROWY_ASSERT((CHUNK_SIZE!=0 || mem != nullptr),
+                    "CHUNK_SIZE==0, intentional crash");
                 return ptrAdd(mem, CHUNK_SIZE*pos);
             }
             const_iterator& operator++(){
                 ++pos;
                 return *this;
             }
-            bool operator!=(const const_iterator& other) const{
-                assert(mem == other.mem);
+            bool operator!=(const const_iterator& other) const noexcept{
+                CROWY_ASSERT(mem == other.mem);
                 return pos != other.pos;
             }
-            bool operator==(const const_iterator& other) const{
-                assert(mem == other.mem);
+            bool operator==(const const_iterator& other) const noexcept{
+                CROWY_ASSERT(mem == other.mem);
                 return pos == other.pos;
             }
-            bool operator!=(const iterator& other) const{
-                assert(mem == other.mem);
+            bool operator!=(const iterator& other) const noexcept{
+                CROWY_ASSERT(mem == other.mem);
                 return pos != other.pos;
             }
-            bool operator==(const iterator& other) const{
-                assert(mem == other.mem);
+            bool operator==(const iterator& other) const noexcept{
+                CROWY_ASSERT(mem == other.mem);
                 return pos == other.pos;
             }
         };
 
-        void* operator[](Index index){
-            assert(index < size_);
-            assert(!(CHUNK_SIZE==0 && "CHUNK_SIZE==0, intentional crash"));
+        void* operator[](Index index) noexcept{
+            return const_cast<void*>(
+                static_cast<const dynamic_vector&>(*this)[index]
+            );
+        }
+        const void* operator[](Index index) const noexcept{
+            CROWY_ASSERT(index < size_);
+            CROWY_ASSERT(CHUNK_SIZE!=0, "CHUNK_SIZE==0, intentional crash");
             return ptrAdd(mem, CHUNK_SIZE*index);
         }
-        const void* operator[](Index index) const{
-            assert(index < size_);
-            assert(!(CHUNK_SIZE==0 && "CHUNK_SIZE==0, intentional crash"));
-            return ptrAdd(mem, CHUNK_SIZE*index);
-        }
-        auto  begin()      { return       iterator(mem, CHUNK_SIZE,     0); }
-        auto    end()      { return       iterator(mem, CHUNK_SIZE, size_); }
-        auto  begin() const{ return const_iterator(mem, CHUNK_SIZE,     0); }
-        auto    end() const{ return const_iterator(mem, CHUNK_SIZE, size_); }
-        auto cbegin() const{ return const_iterator(mem, CHUNK_SIZE,     0); }
-        auto   cend() const{ return const_iterator(mem, CHUNK_SIZE, size_); }
+        auto  begin()       noexcept{ return       iterator(mem, CHUNK_SIZE,     0); }
+        auto    end()       noexcept{ return       iterator(mem, CHUNK_SIZE, size_); }
+        auto  begin() const noexcept{ return const_iterator(mem, CHUNK_SIZE,     0); }
+        auto    end() const noexcept{ return const_iterator(mem, CHUNK_SIZE, size_); }
+        auto cbegin() const noexcept{ return begin();                                }
+        auto   cend() const noexcept{ return end();                                  }
 
-        size_t     size() const{ return size_; }
-        size_t capacity() const{ return  cap_; }
+        size_t     size() const noexcept{ return size_; }
+        size_t capacity() const noexcept{ return  cap_; }
         void resize(size_t new_size){
             if(new_size > cap_){
                 reserve(std::bit_ceil(new_size));
@@ -210,9 +214,9 @@ namespace Crowy
                 mem = new_mem;
             }
             cap_ = new_cap;
-            assert(cap_ >= size_);
+            CROWY_ASSERT(cap_ >= size_);
         }
-        void clear(){ size_ = 0; }
+        void clear() noexcept{ size_ = 0; }
 
         template<all_value... T>
         void emplace(T&&... t){
@@ -221,7 +225,7 @@ namespace Crowy
                 "Component must be trivially copyable!"
             );
             size_t totalSize = (size_t{0} + ... + sizeof(T));
-            assert(totalSize == CHUNK_SIZE);
+            CROWY_ASSERT(totalSize == CHUNK_SIZE);
             resize(size_ + 1);
 
             auto dst = ptrAdd(mem, (size_-1)*CHUNK_SIZE);
@@ -235,7 +239,7 @@ namespace Crowy
             );
             size_t totalSize = (size_t{0} + ... +
                 (std::is_null_pointer_v<T> ? 0 : sizeof(std::remove_pointer_t<T>)));
-            assert(totalSize == CHUNK_SIZE);
+            CROWY_ASSERT(totalSize == CHUNK_SIZE);
             resize(size_ + 1);
 
             auto dst = ptrAdd(mem, (size_-1)*CHUNK_SIZE);
@@ -249,15 +253,15 @@ namespace Crowy
             );
             size_t totalSize = (size_t{0} + ... +
                 (t.has_value() ? sizeof(remove_optional_t<std::remove_cvref_t<T>>) : 0));
-            assert(totalSize == CHUNK_SIZE);
+            CROWY_ASSERT(totalSize == CHUNK_SIZE);
             resize(size_ + 1);
 
             auto dst = ptrAdd(mem, (size_-1)*CHUNK_SIZE);
             Crowy::emplace(dst, std::forward<T>(t)...);
         }
 
-        void swap_remove(Index index){
-            assert(index < size_ && "swap_remove out of range");
+        void swap_remove(Index index) noexcept{
+            CROWY_ASSERT(index < size_, "swap_remove out of range");
             if(index < size_ - 1 && CHUNK_SIZE > 0)
                 memcpy((*this)[index], (*this)[size_-1], CHUNK_SIZE);
             --size_;
