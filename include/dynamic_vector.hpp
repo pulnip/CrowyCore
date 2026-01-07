@@ -106,7 +106,7 @@ namespace Crowy
 
             void* operator*() noexcept{
                 return const_cast<void*>(
-                    *static_cast<iterator&>(*this)
+                    *static_cast<const iterator&>(*this)
                 );
             }
             const void* operator*() const noexcept{
