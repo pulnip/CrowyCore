@@ -408,6 +408,18 @@ namespace Crowy
         };
     }
 
+    inline constexpr auto orthographic(float w, float h, float nearZ, float farZ){
+        auto e22 = 1/(farZ-nearZ);
+        auto e23 = -nearZ*e22;
+
+        return Mat4{
+            Vec4{ 2/w, 0.0f, 0.0f, 0.0f},
+            Vec4{0.0f,  2/h, 0.0f, 0.0f},
+            Vec4{0.0f, 0.0f,  e22,  e23},
+            Vec4{0.0f, 0.0f, 0.0f, 1.0f}
+        };
+    }
+
     inline auto lookAt(Vec3 eye, Vec3 target, Vec3 up){
         auto f = normalize(target - eye);
         auto r = normalize(cross(f, up));
@@ -463,6 +475,19 @@ namespace Crowy
         };
     }
 
+    inline constexpr auto rotateMat(Vec4 q){
+        float xx = q.x * q.x, yy = q.y * q.y, zz = q.z * q.z;
+        float xy = q.x * q.y, xz = q.x * q.z, yz = q.y * q.z;
+        float wx = q.w * q.x, wy = q.w * q.y, wz = q.w * q.z;
+
+        return Mat4{
+            Vec4{1-2*(yy+zz),   2*(xy-wz),   2*(xz+wy), 0.0f},
+            Vec4{  2*(xy+wz), 1-2*(xx+zz),   2*(yz-wx), 0.0f},
+            Vec4{  2*(xz-wy),   2*(yz+wx), 1-2*(xx+yy), 0.0f},
+            Vec4{       0.0f,        0.0f,        0.0f, 0.0f}
+        };
+    }
+
     inline constexpr auto scaleMat(Vec3 s){
         return Mat4{
             Vec4{ s.x, 0.0f, 0.0f, 0.0f},
@@ -470,6 +495,15 @@ namespace Crowy
             Vec4{0.0f, 0.0f,  s.z, 0.0f},
             Vec4{0.0f, 0.0f, 0.0f, 1.0f}
         };
+    }
+
+    inline constexpr auto viewMat(Vec3 pos, Vec4 quat){
+        auto inv = conjugate(quat);
+
+        auto r =    rotateMat( inv);
+        auto t = translateMat(-pos);
+
+        return r*t;
     }
 
     constexpr bool overlap(
