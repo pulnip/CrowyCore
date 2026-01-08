@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <filesystem>
 #include <format>
 #include <string>
@@ -9,6 +10,7 @@ namespace Crowy{
     std::filesystem::path get_absolute_path(const std::filesystem::path&);
 
     std::filesystem::path to_path(const char* utf8Str);
+    std::filesystem::path to_path(const char* utf8Str, size_t len);
     std::string to_utf8String(const std::filesystem::path&);
 }
 

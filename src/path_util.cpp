@@ -39,12 +39,23 @@ namespace Crowy
 
     std::filesystem::path to_path(const char* utf8Str){
     #ifdef _WIN32
-        int len = MultiByteToWideChar(CP_UTF8, 0, utf8Str, -1, nullptr, 0);
-        std::wstring wide(len - 1, 0);
-        MultiByteToWideChar(CP_UTF8, 0, utf8Str, -1, wide.data(), len);
+        int wlen = MultiByteToWideChar(CP_UTF8, 0, utf8Str, -1, nullptr, 0);
+        std::wstring wide(wlen - 1, 0);
+        MultiByteToWideChar(CP_UTF8, 0, utf8Str, -1, wide.data(), wlen);
         return std::filesystem::path(wide);
     #else
         return std::filesystem::path(utf8Str);
+    #endif
+    }
+
+    std::filesystem::path to_path(const char* utf8Str, size_t len){
+    #ifdef _WIN32
+        int wlen = MultiByteToWideChar(CP_UTF8, 0, utf8Str, static_cast<int>(len), nullptr, 0);
+        std::wstring wide(wlen - 1, 0);
+        MultiByteToWideChar(CP_UTF8, 0, utf8Str, static_cast<int>(len), wide.data(), wlen);
+        return std::filesystem::path(wide);
+    #else
+        return std::filesystem::path(std::string(utf8Str, len));
     #endif
     }
 
