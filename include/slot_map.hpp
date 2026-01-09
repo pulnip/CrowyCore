@@ -12,6 +12,7 @@
 #include "assert.hpp"
 #include "generic_handle.hpp"
 #include "math.hpp"
+#include "semantics.hpp"
 #include "core_types.hpp"
 
 namespace Crowy
@@ -26,6 +27,10 @@ namespace Crowy
         struct Slot{
             std::optional<T> data;
             uint32_t generation = 0;
+
+            Slot() = default;
+            ~Slot() = default;
+            DECLARE_MOVE_ONLY(Slot)
 
             void reset() noexcept{
                 ++generation;
@@ -43,8 +48,6 @@ namespace Crowy
             const T* get() const noexcept{
                 return data ? &*data : nullptr;
             }
-
-            Slot() = default;
         };
         std::vector<Slot> slots;
         using Indexes = std::vector<Index>;
