@@ -23,6 +23,36 @@ add_library(Crowy::NumericalMethod ALIAS CrowyNumericalMethod)
 # target Core
 add_library(CrowyCore STATIC)
 
+target_precompile_headers(CrowyCore
+PUBLIC
+    <algorithm>
+    <array>
+    <bit>
+    <cassert>
+    <chrono>
+    <cmath>
+    <cstddef>
+    <cstdlib>
+    <filesystem>
+    <format>
+    <functional>
+    <iterator>
+    <memory>
+    <set>
+    <stdexcept>
+    <optional>
+    <print>
+    <ranges>
+    <source_location>
+    <string>
+    <string_view>
+    <thread>
+    <type_traits>
+    <unordered_map>
+    <utility>
+    <vector>
+)
+
 file(GLOB ALL_HEADERS
     "include/*.hpp"
 )

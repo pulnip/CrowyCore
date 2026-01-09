@@ -78,7 +78,7 @@ namespace Crowy
             if(mem != nullptr)
                 free(mem);
         }
-        DECLARE_PINNED(dynamic_vector)
+        CROWY_DECLARE_PINNED(dynamic_vector)
 
         dynamic_vector(size_t CHUNK_SIZE)
             : CHUNK_SIZE(CHUNK_SIZE){}
@@ -102,7 +102,7 @@ namespace Crowy
         public:
             iterator(void* mem, size_t CHUNK_SIZE, Index pos)
                 :mem(mem), CHUNK_SIZE(CHUNK_SIZE), pos(pos){}
-            DECLARE_CONSTRUCT_ONLY(iterator)
+            CROWY_DECLARE_CONSTRUCT_ONLY(iterator)
 
             void* operator*() noexcept{
                 return const_cast<void*>(
@@ -146,7 +146,7 @@ namespace Crowy
         public:
             const_iterator(const void* mem, size_t CHUNK_SIZE, Index pos)
                 :mem(mem), CHUNK_SIZE(CHUNK_SIZE), pos(pos){}
-            DECLARE_CONSTRUCT_ONLY(const_iterator)
+            CROWY_DECLARE_CONSTRUCT_ONLY(const_iterator)
 
             const void* operator*() noexcept{
                 return *static_cast<const const_iterator&>(*this);

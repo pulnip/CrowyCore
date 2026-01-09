@@ -30,7 +30,7 @@ namespace Crowy
 
             Slot() = default;
             ~Slot() = default;
-            DECLARE_MOVE_ONLY(Slot)
+            CROWY_DECLARE_MOVE_ONLY(Slot)
 
             void reset() noexcept{
                 ++generation;

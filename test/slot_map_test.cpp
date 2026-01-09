@@ -35,7 +35,7 @@ struct LifetimeTracker{
         return *this;
     }
 
-    DECLARE_NON_COPYABLE(LifetimeTracker)
+    CROWY_DECLARE_NON_COPYABLE(LifetimeTracker)
 };
 
 int LifetimeTracker::constructed = 0;

@@ -40,7 +40,7 @@ namespace Crowy
     std::filesystem::path to_path(const char* utf8Str){
     #ifdef _WIN32
         int wlen = MultiByteToWideChar(CP_UTF8, 0, utf8Str, -1, nullptr, 0);
-        std::wstring wide(wlen - 1, 0);
+        std::wstring wide(wlen, 0);
         MultiByteToWideChar(CP_UTF8, 0, utf8Str, -1, wide.data(), wlen);
         return std::filesystem::path(wide);
     #else
@@ -51,7 +51,7 @@ namespace Crowy
     std::filesystem::path to_path(const char* utf8Str, size_t len){
     #ifdef _WIN32
         int wlen = MultiByteToWideChar(CP_UTF8, 0, utf8Str, static_cast<int>(len), nullptr, 0);
-        std::wstring wide(wlen - 1, 0);
+        std::wstring wide(wlen, 0);
         MultiByteToWideChar(CP_UTF8, 0, utf8Str, static_cast<int>(len), wide.data(), wlen);
         return std::filesystem::path(wide);
     #else

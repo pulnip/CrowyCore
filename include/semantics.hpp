@@ -1,42 +1,42 @@
 #pragma once
 
 // copy - move semantics
-#define DECLARE_DEFAULT_COPYABLE(Type) \
+#define CROWY_DECLARE_DEFAULT_COPYABLE(Type) \
     Type(const Type&) = default; \
     Type& operator=(const Type&) = default;
-#define DECLARE_DEFAULT_MOVABLE(Type) \
+#define CROWY_DECLARE_DEFAULT_MOVABLE(Type) \
     Type(Type&&) = default; \
     Type& operator=(Type&&) = default;
-#define DECLARE_NON_COPYABLE(Type) \
+#define CROWY_DECLARE_NON_COPYABLE(Type) \
     Type(const Type&) = delete; \
     Type& operator=(const Type&) = delete;
-#define DECLARE_NON_MOVABLE(Type) \
+#define CROWY_DECLARE_NON_MOVABLE(Type) \
     Type(Type&&) = delete; \
     Type& operator=(Type&&) = delete;
 
-#define DECLARE_PINNED(Type) \
-    DECLARE_NON_COPYABLE(Type) \
-    DECLARE_NON_MOVABLE(Type)
-#define DECLARE_COPY_ONLY(Type) \
-    DECLARE_DEFAULT_COPYABLE(Type) \
-    DECLARE_NON_MOVABLE(Type)
-#define DECLARE_MOVE_ONLY(Type) \
-    DECLARE_NON_COPYABLE(Type) \
-    DECLARE_DEFAULT_MOVABLE(Type)
-#define DECLARE_TRANSFERABLE(Type) \
-    DECLARE_DEFAULT_COPYABLE(Type) \
-    DECLARE_DEFAULT_MOVABLE(Type)
+#define CROWY_DECLARE_PINNED(Type) \
+    CROWY_DECLARE_NON_COPYABLE(Type) \
+    CROWY_DECLARE_NON_MOVABLE(Type)
+#define CROWY_DECLARE_COPY_ONLY(Type) \
+    CROWY_DECLARE_DEFAULT_COPYABLE(Type) \
+    CROWY_DECLARE_NON_MOVABLE(Type)
+#define CROWY_DECLARE_MOVE_ONLY(Type) \
+    CROWY_DECLARE_NON_COPYABLE(Type) \
+    CROWY_DECLARE_DEFAULT_MOVABLE(Type)
+#define CROWY_DECLARE_TRANSFERABLE(Type) \
+    CROWY_DECLARE_DEFAULT_COPYABLE(Type) \
+    CROWY_DECLARE_DEFAULT_MOVABLE(Type)
 
-#define DECLARE_NON_ASSIGNABLE(Type) \
+#define CROWY_DECLARE_NON_ASSIGNABLE(Type) \
     Type& operator=(const Type&) = delete; \
     Type& operator=(Type&&) = delete;
-#define DECLARE_CONSTRUCT_ONLY(Type) \
+#define CROWY_DECLARE_CONSTRUCT_ONLY(Type) \
     Type(const Type&) = default; \
     Type(Type&&) = default; \
-    DECLARE_NON_ASSIGNABLE(Type)
+    CROWY_DECLARE_NON_ASSIGNABLE(Type)
 
 // interface semantics
-#define DECLARE_INTERFACE(Type) \
+#define CROWY_DECLARE_INTERFACE(Type) \
     Type() = default; \
     virtual ~Type() = default; \
-    DECLARE_PINNED(Type)
+    CROWY_DECLARE_PINNED(Type)
