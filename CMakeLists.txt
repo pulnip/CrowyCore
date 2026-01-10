@@ -80,5 +80,7 @@ PUBLIC
 add_library(Crowy::Core ALIAS CrowyCore)
 
 if(CROWYCORE_ENABLE_TEST)
+    enable_testing()
+    include(GoogleTest)
     add_subdirectory(test)
 endif()

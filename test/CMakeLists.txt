@@ -1,5 +1,3 @@
-enable_testing()
-
 # target for visulize Numerical Method
 add_executable(CrowyNumericalMethodVisualize
     root_finding_visualize.c
@@ -9,8 +7,6 @@ target_link_libraries(CrowyNumericalMethodVisualize
 PRIVATE
     Crowy::NumericalMethod
 )
-
-include(GoogleTest)
 
 # target for test Numerical Method
 add_executable(CrowyNumericalMethodTest
@@ -29,7 +25,7 @@ add_test(
     COMMAND $<TARGET_FILE:CrowyNumericalMethodTest>
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
-set_tests_properties(Crowy-NumericalMethod-Test PROPERTIES LABELS "unit;core")
+set_tests_properties(Crowy-NumericalMethod-Test PROPERTIES LABELS "unit")
 
 file(GLOB TEST_SOURCES
     "*_test.cpp"
@@ -51,4 +47,4 @@ add_test(
     COMMAND $<TARGET_FILE:CrowyCoreTest>
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
-set_tests_properties(Crowy-Core-Test PROPERTIES LABELS "unit;core")
+set_tests_properties(Crowy-Core-Test PROPERTIES LABELS "unit")
