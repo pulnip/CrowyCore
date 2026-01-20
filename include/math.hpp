@@ -7,6 +7,7 @@
 
 namespace Crowy
 {
+    // column vector
     struct Vec2{
         float x, y;
 
@@ -23,6 +24,7 @@ namespace Crowy
         }
     }; static_assert(std::is_trivially_copyable_v<Vec2>);
 
+    // column vector
     struct Vec3{
         float x, y, z;
 
@@ -41,6 +43,7 @@ namespace Crowy
         }
     }; static_assert(std::is_trivially_copyable_v<Vec3>);
 
+    // column vector
     struct Vec4{
         float x, y, z, w;
 
@@ -62,7 +65,7 @@ namespace Crowy
         }
     }; static_assert(std::is_trivially_copyable_v<Vec4>);
 
-    // row major
+    // column-major matrix
     using Mat4 = std::array<Vec4, 4>;
     static_assert(std::is_trivially_copyable_v<Mat4>);
 
@@ -79,20 +82,51 @@ namespace Crowy
     inline constexpr auto operator+(Vec2 lhs, Vec2 rhs){
         return Vec2{lhs.x+rhs.x, lhs.y+rhs.y};
     }
-    inline constexpr auto operator-(Vec2 lhs, Vec2 rhs){
-        return Vec2{lhs.x-rhs.x, lhs.y-rhs.y};
+    inline constexpr Vec2& operator+=(Vec2& lhs, Vec2 rhs){
+        lhs.x += rhs.x;
+        lhs.y += rhs.y;
+        return lhs;
     }
     inline constexpr auto operator-(Vec2 v){
         return Vec2{-v.x, -v.y};
     }
-    inline constexpr auto operator*(Vec2 v, float f){
-        return Vec2{v.x*f, v.y*f};
+    inline constexpr auto operator-(Vec2 lhs, Vec2 rhs){
+        return Vec2{lhs.x-rhs.x, lhs.y-rhs.y};
+    }
+    inline constexpr Vec2& operator-=(Vec2& lhs, Vec2 rhs){
+        lhs.x -= rhs.x;
+        lhs.y -= rhs.y;
+        return lhs;
+    }
+    inline constexpr auto operator*(Vec2 lhs, Vec2 rhs){
+        return Vec2{
+            lhs.x * rhs.x,
+            lhs.y * rhs.y,
+        };
+    }
+    inline constexpr Vec2& operator*=(Vec2& lhs, Vec2 rhs){
+        lhs.x *= rhs.x;
+        lhs.y *= rhs.y;
+        return lhs;
     }
     inline constexpr auto operator*(float f, Vec2 v){
-        return Vec2{f*v.x, f*v.y};
+        return Vec2{f * v.x, f * v.y};
+    }
+    inline constexpr auto operator*(Vec2 v, float f){
+        return f * v;
+    }
+    inline constexpr Vec2& operator*=(Vec2& v, float f){
+        v.x *= f;
+        v.y *= f;
+        return v;
     }
     inline constexpr auto operator/(Vec2 v, float f){
         return Vec2{v.x/f, v.y/f};
+    }
+    inline constexpr Vec2& operator/=(Vec2& v, float f){
+        v.x /= f;
+        v.y /= f;
+        return v;
     }
 
     inline constexpr auto operator==(Vec2 lhs, Vec2 rhs){
@@ -163,17 +197,23 @@ namespace Crowy
             lhs.z * rhs.z
         };
     }
+    inline constexpr Vec3& operator*=(Vec3& lhs, Vec3 rhs){
+        lhs.x *= rhs.x;
+        lhs.y *= rhs.y;
+        lhs.z *= rhs.z;
+        return lhs;
+    }
     inline constexpr auto operator*(float f, Vec3 v){
         return Vec3{
-            f*v.x,
-            f*v.y,
-            f*v.z
+            f * v.x,
+            f * v.y,
+            f * v.z
         };
     }
     inline constexpr auto operator*(Vec3 v, float f){
-        return f*v;
+        return f * v;
     }
-    inline constexpr auto operator*=(Vec3& v, float f)->Vec3&{
+    inline constexpr Vec3& operator*=(Vec3& v, float f){
         v.x *= f;
         v.y *= f;
         v.z *= f;
@@ -185,6 +225,12 @@ namespace Crowy
             v.y/f,
             v.z/f
         };
+    }
+    inline constexpr Vec3& operator/=(Vec3& v, float f){
+        v.x /= f;
+        v.y /= f;
+        v.z /= f;
+        return v;
     }
 
     inline constexpr auto operator==(Vec3 lhs, Vec3 rhs){
@@ -227,21 +273,76 @@ namespace Crowy
         return Vec4{-quat.x, -quat.y, -quat.z, quat.w};
     }
 
+    inline constexpr auto operator+(Vec4 lhs, Vec4 rhs){
+        return Vec4{lhs.x+rhs.x, lhs.y+rhs.y, lhs.z+rhs.z, lhs.w+rhs.w};
+    }
+    inline constexpr Vec4& operator+=(Vec4& lhs, Vec4 rhs){
+        lhs.x += rhs.x;
+        lhs.y += rhs.y;
+        lhs.z += rhs.z;
+        lhs.w += rhs.w;
+        return lhs;
+    }
+    inline constexpr auto operator-(Vec4 v){
+        return Vec4{-v.x, -v.y, -v.z, -v.w};
+    }
+    inline constexpr auto operator-(Vec4 lhs, Vec4 rhs){
+        return Vec4{lhs.x-rhs.x, lhs.y-rhs.y, lhs.z-rhs.z, lhs.w-rhs.w};
+    }
+    inline constexpr Vec4& operator-=(Vec4& lhs, Vec4 rhs){
+        lhs.x -= rhs.x;
+        lhs.y -= rhs.y;
+        lhs.z -= rhs.z;
+        lhs.w -= rhs.w;
+        return lhs;
+    }
     inline constexpr auto operator*(Vec4 lhs, Vec4 rhs){
         return Vec4{
-            lhs.w*rhs.x + lhs.x*rhs.w + lhs.y*rhs.z - lhs.z*rhs.y,
-            lhs.w*rhs.y - lhs.x*rhs.z + lhs.y*rhs.w + lhs.z*rhs.x,
-            lhs.w*rhs.z + lhs.x*rhs.y - lhs.y*rhs.x + lhs.z*rhs.w,
-            lhs.w*rhs.w - lhs.x*rhs.x - lhs.y*rhs.y - lhs.z*rhs.z
+            lhs.x * rhs.x,
+            lhs.y * rhs.y,
+            lhs.z * rhs.z,
+            lhs.w * rhs.w
         };
     }
-    inline constexpr auto operator/(Vec4 lhs, float rhs){
+    inline constexpr Vec4& operator*=(Vec4& lhs, Vec4 rhs){
+        lhs.x *= rhs.x;
+        lhs.y *= rhs.y;
+        lhs.z *= rhs.z;
+        lhs.w *= rhs.w;
+        return lhs;
+    }
+    inline constexpr auto operator*(float f, Vec4 v){
         return Vec4{
-            lhs.x/rhs,
-            lhs.y/rhs,
-            lhs.z/rhs,
-            lhs.w/rhs,
+            f * v.x,
+            f * v.y,
+            f * v.z,
+            f * v.w
         };
+    }
+    inline constexpr auto operator*(Vec4 v, float f){
+        return f * v;
+    }
+    inline constexpr Vec4& operator*=(Vec4& v, float f){
+        v.x *= f;
+        v.y *= f;
+        v.z *= f;
+        v.w *= f;
+        return v;
+    }
+    inline constexpr auto operator/(Vec4 v, float f){
+        return Vec4{
+            v.x / f,
+            v.y / f,
+            v.z / f,
+            v.w / f,
+        };
+    }
+    inline constexpr Vec4& operator/=(Vec4& v, float f){
+        v.x /= f;
+        v.y /= f;
+        v.z /= f;
+        v.w /= f;
+        return v;
     }
     inline constexpr auto dot(Vec4 lhs, Vec4 rhs){
         return lhs.x*rhs.x + lhs.y*rhs.y + lhs.z*rhs.z + lhs.w*rhs.w;
@@ -255,7 +356,15 @@ namespace Crowy
     inline auto normalize(Vec4 v){
         return v / norm(v);
     }
-        inline auto quat(Vec3 r, Vec3 u, Vec3 f){
+    inline constexpr auto quat(Vec4 lhs, Vec4 rhs){
+        return Vec4{
+            lhs.w*rhs.x + lhs.x*rhs.w + lhs.y*rhs.z - lhs.z*rhs.y,
+            lhs.w*rhs.y - lhs.x*rhs.z + lhs.y*rhs.w + lhs.z*rhs.x,
+            lhs.w*rhs.z + lhs.x*rhs.y - lhs.y*rhs.x + lhs.z*rhs.w,
+            lhs.w*rhs.w - lhs.x*rhs.x - lhs.y*rhs.y - lhs.z*rhs.z
+        };
+    }
+    inline auto quat(Vec3 r, Vec3 u, Vec3 f){
         float m00 = r.x, m01 = u.x, m02 = f.x;
         float m10 = r.y, m11 = u.y, m12 = f.y;
         float m20 = r.z, m21 = u.z, m22 = f.z;
@@ -335,27 +444,30 @@ namespace Crowy
             std::cos(half)
         };
     }
-    inline auto rotate(Vec3 v, Vec4 quat){
-        return asVec3(quat * asVec4(v) * conjugate(quat));
+    inline constexpr auto rotate(Vec4 v, Vec4 q){
+        return quat(quat(q, v), conjugate(q));
+    }
+    inline constexpr auto rotate(Vec3 v, Vec4 q){
+        return asVec3(rotate(asVec4(v), q));
     }
 
-    inline constexpr auto right(Vec4 quat){
+    inline constexpr auto right(Vec4 q){
         auto e_x = Vec4{1.0f, 0.0f, 0.0f, 0.0f};
-        auto vec = quat * e_x * conjugate(quat);
+        auto vec = rotate(e_x, q);
         return asVec3(vec);
     }
     inline constexpr auto ground_right(Vec4 quat){
         auto f = right(quat);
         return f - dot(f, unitY())*unitY();
     }
-    inline constexpr auto up(Vec4 quat){
+    inline constexpr auto up(Vec4 q){
         auto e_y = Vec4{0.0f, 1.0f, 0.0f, 0.0f};
-        auto vec = quat * e_y * conjugate(quat);
+        auto vec = rotate(e_y, q);
         return asVec3(vec);
     }
-    inline constexpr auto forward(Vec4 quat){
+    inline constexpr auto forward(Vec4 q){
         auto e_z = Vec4{0.0f, 0.0f, 1.0f, 0.0f};
-        auto vec = quat * e_z * conjugate(quat);
+        auto vec = rotate(e_z, q);
         return asVec3(vec);
     }
     inline constexpr auto ground_forward(Vec4 quat){
@@ -368,25 +480,13 @@ namespace Crowy
                lhs.z==rhs.z && lhs.w==rhs.w;
     }
 
-    inline constexpr auto operator*(const Mat4& lhs, const Mat4& rhs){
-        auto rhs_t = transpose(rhs);
-
-        return Mat4{
-            Vec4{dot(lhs[0], rhs_t[0]), dot(lhs[0], rhs_t[1]), dot(lhs[0], rhs_t[2]), dot(lhs[0], rhs_t[3])},
-            Vec4{dot(lhs[1], rhs_t[0]), dot(lhs[1], rhs_t[1]), dot(lhs[1], rhs_t[2]), dot(lhs[1], rhs_t[3])},
-            Vec4{dot(lhs[2], rhs_t[0]), dot(lhs[2], rhs_t[1]), dot(lhs[2], rhs_t[2]), dot(lhs[2], rhs_t[3])},
-            Vec4{dot(lhs[3], rhs_t[0]), dot(lhs[3], rhs_t[1]), dot(lhs[3], rhs_t[2]), dot(lhs[3], rhs_t[3])},
-        };
+    // expected multiplication form
+    inline constexpr Vec4 operator*(const Mat4& lhs, const Vec4& rhs){
+        return lhs[0]*rhs.x + lhs[1]*rhs.y + lhs[2]*rhs.z + lhs[3]*rhs.w;
     }
 
-    // expected multiplication form
-    inline constexpr auto operator*(const Mat4& lhs, const Vec4& rhs){
-        return Vec4{
-            dot(lhs[0], rhs),
-            dot(lhs[1], rhs),
-            dot(lhs[2], rhs),
-            dot(lhs[3], rhs),
-        };
+    inline constexpr auto operator*(const Mat4& lhs, const Mat4& rhs){
+        return Mat4{lhs*rhs[0], lhs*rhs[1], lhs*rhs[2], lhs*rhs[3]};
     }
 
     inline auto perspective(
@@ -401,10 +501,10 @@ namespace Crowy
         auto e23 = (farZ*nearZ) / dz;
 
         return Mat4{
-            Vec4{ e00, 0.0f,  0.0f, 0.0f},
-            Vec4{0.0f,  e11,  0.0f, 0.0f},
-            Vec4{0.0f, 0.0f,   e22,  e23},
-            Vec4{0.0f, 0.0f, -1.0f, 0.0f}
+            Vec4{ e00, 0.0f, 0.0f,  0.0f},
+            Vec4{0.0f,  e11, 0.0f,  0.0f},
+            Vec4{0.0f, 0.0f,  e22, -1.0f},
+            Vec4{0.0f, 0.0f,  e23,  0.0f}
         };
     }
 
@@ -413,10 +513,11 @@ namespace Crowy
         auto e23 = -nearZ*e22;
 
         return Mat4{
+            // column vector
             Vec4{ 2/w, 0.0f, 0.0f, 0.0f},
             Vec4{0.0f,  2/h, 0.0f, 0.0f},
-            Vec4{0.0f, 0.0f,  e22,  e23},
-            Vec4{0.0f, 0.0f, 0.0f, 1.0f}
+            Vec4{0.0f, 0.0f,  e22, 0.0f},
+            Vec4{0.0f, 0.0f,  e23, 1.0f}
         };
     }
 
@@ -424,22 +525,23 @@ namespace Crowy
         auto f = normalize(target - eye);
         auto r = normalize(cross(f, up));
         auto u = cross(r, f);
-
+        // column-major
         return Mat4{
-            Vec4{ r.x,  r.y,  r.z, -dot(r, eye)},
-            Vec4{ u.x,  u.y,  u.z, -dot(u, eye)},
-            Vec4{-f.x, -f.y, -f.z,  dot(f, eye)},
-            Vec4{0.0f, 0.0f, 0.0f,         1.0f}
+            Vec4{         r.x,          u.x,        -f.x, 0.0f},
+            Vec4{         r.y,          u.y,        -f.y, 0.0f},
+            Vec4{         r.z,          u.z,        -f.z, 0.0f},
+            Vec4{-dot(r, eye), -dot(u, eye), dot(f, eye), 1.0f}
         };
     }
 
     inline auto rotateXMat(float theta){
         float c = std::cos(theta);
         float s = std::sin(theta);
+        // column-major
         return Mat4{
             Vec4{1.0f, 0.0f, 0.0f, 0.0f},
-            Vec4{0.0f,    c,   -s, 0.0f},
-            Vec4{0.0f,    s,    c, 0.0f},
+            Vec4{0.0f,    c,    s, 0.0f},
+            Vec4{0.0f,   -s,    c, 0.0f},
             Vec4{0.0f, 0.0f, 0.0f, 1.0f}
         };
     }
@@ -447,10 +549,11 @@ namespace Crowy
     inline auto rotateYMat(float theta){
         float c = std::cos(theta);
         float s = std::sin(theta);
+        // column-major
         return Mat4{
-            Vec4{   c, 0.0f,    s, 0.0f},
+            Vec4{   c, 0.0f,   -s, 0.0f},
             Vec4{0.0f, 1.0f, 0.0f, 0.0f},
-            Vec4{  -s, 0.0f,    c, 0.0f},
+            Vec4{   s, 0.0f,    c, 0.0f},
             Vec4{0.0f, 0.0f, 0.0f, 1.0f}
         };
     }
@@ -458,20 +561,22 @@ namespace Crowy
     inline auto rotateZMat(float theta){
         float c = std::cos(theta);
         float s = std::sin(theta);
+        // column-major
         return Mat4{
-            Vec4{   c,   -s, 0.0f, 0.0f},
-            Vec4{   s,    c, 0.0f, 0.0f},
+            Vec4{   c,    s, 0.0f, 0.0f},
+            Vec4{  -s,    c, 0.0f, 0.0f},
             Vec4{0.0f, 0.0f, 1.0f, 0.0f},
             Vec4{0.0f, 0.0f, 0.0f, 1.0f}
         };
     }
 
     inline constexpr auto translateMat(Vec3 t){
+        // column-major
         return Mat4{
-            Vec4{1.0f, 0.0f, 0.0f, t.x},
-            Vec4{0.0f, 1.0f, 0.0f, t.y},
-            Vec4{0.0f, 0.0f, 1.0f, t.z},
-            Vec4{0.0f, 0.0f, 0.0f, 1.0f}
+            Vec4{1.0f, 0.0f, 0.0f, 0.0f},
+            Vec4{0.0f, 1.0f, 0.0f, 0.0f},
+            Vec4{0.0f, 0.0f, 1.0f, 0.0f},
+            Vec4{ t.x,  t.y,  t.z, 1.0f}
         };
     }
 
@@ -479,12 +584,12 @@ namespace Crowy
         float xx = q.x * q.x, yy = q.y * q.y, zz = q.z * q.z;
         float xy = q.x * q.y, xz = q.x * q.z, yz = q.y * q.z;
         float wx = q.w * q.x, wy = q.w * q.y, wz = q.w * q.z;
-
+        // column-major
         return Mat4{
-            Vec4{1-2*(yy+zz),   2*(xy-wz),   2*(xz+wy), 0.0f},
-            Vec4{  2*(xy+wz), 1-2*(xx+zz),   2*(yz-wx), 0.0f},
-            Vec4{  2*(xz-wy),   2*(yz+wx), 1-2*(xx+yy), 0.0f},
-            Vec4{       0.0f,        0.0f,        0.0f, 0.0f}
+            Vec4{1-2*(yy+zz),   2*(xy+wz),   2*(xz-wy), 0.0f},
+            Vec4{  2*(xy-wz), 1-2*(xx+zz),   2*(yz+wx), 0.0f},
+            Vec4{  2*(xz+wy),   2*(yz-wx), 1-2*(xx+yy), 0.0f},
+            Vec4{       0.0f,        0.0f,        0.0f, 1.0f}
         };
     }
 
