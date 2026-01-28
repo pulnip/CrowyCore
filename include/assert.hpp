@@ -3,6 +3,7 @@
 #include <format>
 #include <source_location>
 #include <string_view>
+#include <cassert>
 
 namespace Crowy
 {
@@ -15,9 +16,7 @@ namespace Crowy
     }
 }
 
-#ifdef NDEBUG
-    #define CROWY_ASSERT(expr, ...) ((void)0)
-#else
+#if defined(_DEBUG) || !defined(NDEBUG)
     #define CROWY_ASSERT(expr, ...) \
         do{ \
             if(!(expr)) [[unlikely]]{ \
@@ -28,4 +27,6 @@ namespace Crowy
                 ); \
             } \
         } while(false)
+#else
+    #define CROWY_ASSERT(expr, ...) ((void)0)
 #endif
